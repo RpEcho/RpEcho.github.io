@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Slyz - YouTube Video Downloader</title>
+    <title>Slyz Chat Room</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f5f5f5;
+            background-color: #f0f0f0;
             margin: 0;
             padding: 0;
         }
@@ -24,146 +24,93 @@
             margin: 0;
         }
 
-        .container {
-            max-width: 600px;
-            margin: 20px auto;
-            padding: 20px;
+        .chat-container {
             background-color: #fff;
-            border-radius: 5px;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            border-radius: 10px;
             box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
         }
 
-        label {
-            font-weight: bold;
+        .chat-messages {
+            margin-bottom: 20px;
+        }
+
+        .message {
+            background-color: #007BFF;
+            color: #fff;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        .input-container {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         input[type="text"] {
-            width: 100%;
+            flex: 1;
             padding: 10px;
-            margin-bottom: 10px;
             border: 1px solid #ccc;
             border-radius: 5px;
+            margin-right: 10px;
         }
 
-        input[type="submit"] {
-            background-color: #333;
+        button#send {
+            background-color: #007BFF;
             color: #fff;
-            padding: 10px 20px;
             border: none;
             border-radius: 5px;
+            padding: 10px 20px;
             cursor: pointer;
         }
 
-        input[type="submit"]:hover {
-            background-color: #555;
+        button#send:hover {
+            background-color: #0056b3;
         }
-
-        .download-link {
-            display: none;
-            margin-top: 20px;
-        }
-
-        .download-link a {
-            display: inline-block;
-            background-color: #333;
-            color: #fff;
-            text-decoration: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-        }
-
-        .download-link a:hover {
-            background-color: #555;
-        }
-
-        /* Additional Styles */
-        .website-info {
-            margin-top: 20px;
-            text-align: center;
-            font-style: italic;
-            color: #777;
-
     </style>
 </head>
 <body>
     <header>
-        <h1>Slyz - YouTube Video Downloader</h1>
+        <h1>Welcome to Slyz Chat Room</h1>
     </header>
-
-    <div class="container">
-        <form id="download-form">
-            <label for="videoLink">Paste YouTube Video Link:</label><br>
-            <input type="text" id="videoLink" name="videoLink" required><br><br>
-            <input type="submit" value="Download">
-        </form>
-
-        <div class="download-link" id="download-link">
-            <!-- The download link will appear here -->
-        </div>
-
-        <div class="website-info">
-            <p>Welcome to Slyz, your YouTube video downloader. Download your favorite YouTube videos in a snap!</p>
-            <p>Simply paste the video link above, click "Download," and get your video ready for offline viewing.</p>
+    
+    <div class="chat-container">
+        <div class="chat-messages" id="chat-messages">
+            <!-- Chat messages will be displayed here -->
         </div>
     </div>
 
-    <!-- Include your JavaScript code here -->
-</body>
-</html>
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YouTube Video Downloader</title>
-    <style>
-        /* Your CSS styles here (if any) */
-    </style>
-</head>
-<body>
-    <header>
-        <h1>YouTube Video Downloader</h1>
-    </header>
-
-    <div class="container">
-        <form id="download-form">
-            <label for="videoLink">Paste YouTube Video Link:</label><br>
-            <input type="text" id="videoLink" name="videoLink" required><br><br>
-            <input type="submit" value="Download">
-        </form>
-
-        <div class="download-link" id="download-link">
-            <!-- The download link will appear here -->
-        </div>
+    <div class="input-container">
+        <input type="text" id="message" placeholder="Type your message">
+        <button id="send">Send</button>
     </div>
 
     <script>
-        document.getElementById('download-form').addEventListener('submit', function (e) {
-            e.preventDefault();
+        const chatMessages = document.getElementById('chat-messages');
+        const messageInput = document.getElementById('message');
+        const sendButton = document.getElementById('send');
 
-            const videoLink = document.getElementById('videoLink').value;
+        sendButton.addEventListener('click', () => {
+            const messageText = messageInput.value.trim();
+            if (messageText !== '') {
+                const messageElement = document.createElement('div');
+                messageElement.className = 'message';
+                messageElement.textContent = messageText;
+                chatMessages.appendChild(messageElement);
+                messageInput.value = '';
+            }
+        });
 
-            // Replace 'YOUR_API_KEY' with your actual API key
-            const apiKey = 'AIzaSyAleIGjrxCUS4SdnM1upi5Bgal3f90X36I';
-            const apiUrl = `https://www.googleapis.com/youtube/v3/videos?key=${apiKey}&part=snippet&id=${videoLink}`;
-
-            fetch(apiUrl)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.items && data.items.length > 0) {
-                        const videoId = data.items[0].id;
-                        const downloadLink = `https://www.youtube.com/watch?v=${videoId}`;
-                        document.getElementById('download-link').innerHTML = `<a href="${downloadLink}" target="_blank">Download Video</a>`;
-                        document.getElementById('download-link').style.display = 'block';
-                    } else {
-                        alert('Video not found or API quota exceeded.');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('An error occurred while fetching video data.');
-                });
+        // Pressing Enter key to send a message
+        messageInput.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                sendButton.click();
+            }
         });
     </script>
 </body>
